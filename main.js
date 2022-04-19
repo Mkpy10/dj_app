@@ -1,3 +1,8 @@
+Left_Wrist_X = 0;
+Left_Wrist_Y = 0;
+Right_Wrist_X = 0;
+Right_Wrist_Y = 0;
+
 Cry_Baby_Song = "";
 Bella_Ciao = "";
 
@@ -11,10 +16,30 @@ function setup(){
     canvas.center();
     Video = createCapture(VIDEO);
     Video.hide();
+    PoseNetVar = ml5.poseNet(Video, modelLoaded);
 } 
 
 function draw(){
     image(Video, 0, 0, 600, 500);
     fill("#0000FF");
     stroke("#000000");
+}
+
+function modelLoaded(){
+    console.log('PoseNet is Initialised!');
+    PoseNetVar.on('pose', PoseResult);
+}
+
+function PoseResult(results){
+    if (results.length > 0) {
+        console.log(results);
+
+        Left_Wrist_X = results[0].pose.leftWrist.x;
+        Left_Wrist_Y = results[0].pose.leftWrist.y;
+        console.log('X Coordinate of Left Wrist = '+ Left_Wrist_X+', Y Coordinate of Left Wrist = '+Left_Wrist_Y);
+        
+        Right_Wrist_X = results[0].pose.rightWrist.x;
+        Right_Wrist_Y = results[0].pose.rightWrist.y;
+        console.log('X Coordinate of Right Wrist = '+Right_Wrist_X+', Y Coordinateof Right Wrist = '+Right_Wrist_Y);
+    }
 }
